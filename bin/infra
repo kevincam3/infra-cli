@@ -107,7 +107,7 @@ load_config "$PROJECT_DIR"
 
 echo -e "\033[0;34m"
 if [ -n "${BANNER:-}" ]; then
-  echo -e "$BANNER"
+  printf '%s\n' "$BANNER"
 else
   cat <<'EOF'
    _        __
