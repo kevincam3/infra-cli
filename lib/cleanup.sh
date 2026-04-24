@@ -20,7 +20,9 @@ cleanup_exited_containers() {
     done <<<"$containers"
   done
 
-  [ "$removed" = false ] && info "No exited containers to remove"
+  if [ "$removed" = false ]; then
+    info "No exited containers to remove"
+  fi
 }
 
 cleanup_anonymous_volumes() {
@@ -36,7 +38,9 @@ cleanup_anonymous_volumes() {
     fi
   done
 
-  [ "$removed" = false ] && info "No unused volumes to remove"
+  if [ "$removed" = false ]; then
+    info "No unused volumes to remove"
+  fi
 }
 
 # Remove older versions of images that this project's running containers reference.
@@ -139,5 +143,7 @@ cleanup_old_images() {
     done <<<"$images"
   done
 
-  [ "$removed_any" = false ] && info "No unused images to remove"
+  if [ "$removed_any" = false ]; then
+    info "No unused images to remove"
+  fi
 }
