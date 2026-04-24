@@ -10,7 +10,7 @@ ensure_network() {
 }
 
 # Bring a single stack up or down. Silently skips stacks with no compose files.
-# Relies on these globals from bin/infra:
+# Relies on these globals from bin/infra.sh:
 #   COMMAND          start|stop
 #   COMPOSE_ACTION   e.g. "up -d --wait" or "down"
 #   ENVIRONMENT      dev|prod
