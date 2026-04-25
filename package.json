@@ -21,7 +21,7 @@
   "scripts": {
     "postinstall": "node scripts/postinstall.mjs",
     "prepare": "vp config",
-    "release": "node scripts/release-preflight.mjs && semantic-release --no-ci"
+    "release": "node scripts/release-preflight.mjs"
   },
   "devDependencies": {
     "@commitlint/cli": "^20.5.2",
