@@ -1,6 +1,6 @@
 {
   "name": "@kevincam3/infra-cli",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "CLI for orchestrating per-project Docker Compose stacks (infrastructure, applications, tooling) with environment-aware secret export.",
   "bin": {
     "infra": "./bin/infra.sh"
