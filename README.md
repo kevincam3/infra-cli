@@ -12,9 +12,9 @@ Add to your project's `docker/package.json`:
     "@kevincam3/infra-cli": "github:kevincam3/infra-cli"
   },
   "scripts": {
-    "dev":       "infra start --env dev",
-    "dev:down":  "infra stop  --env dev",
-    "prod":      "infra start --env prod",
+    "dev": "infra start --env dev",
+    "dev:down": "infra stop  --env dev",
+    "prod": "infra start --env prod",
     "prod:down": "infra stop  --env prod"
   }
 }
@@ -74,51 +74,44 @@ infra version
 
 ## Per-project config: `infra.config.sh`
 
-Optional. If absent, `PROJECT_NAME` falls back to the `name` field in `./package.json`.
+Optional. The example file dropped in by the postinstall hook contains every
+supported setting commented out. Uncomment only what you need to override.
 
-```bash
-# docker/infra.config.sh
-PROJECT_NAME="tcmsvc"
+| Setting                                                               | Default                                 | Notes                                                                                                    |
+| --------------------------------------------------------------------- | --------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+| `PROJECT_NAME`                                                        | `name` field from `./package.json`      | Compose project prefix.                                                                                  |
+| `STACKS`                                                              | `(infrastructure applications tooling)` | Order matters; each is a directory under the run dir.                                                    |
+| `NETWORKS`                                                            | `(proxy "socket-proxy --internal")`     | Ensured on every run. Each entry is a network name optionally followed by `docker network create` flags. |
+| `NETWORKS_DEV`                                                        | `(mailpit)`                             | Ensured only on `--env dev`. Same format as `NETWORKS`.                                                  |
+| `DEV_SHARED_SERVICES`                                                 | `()` (empty)                            | Services to deduplicate across compose projects in dev.                                                  |
+| `BANNER`                                                              | Built-in ASCII art                      | Multi-line string printed as the header.                                                                 |
+| `SECRETS_INFRASTRUCTURE` / `SECRETS_APPLICATIONS` / `SECRETS_TOOLING` | `()` (empty)                            | Per-stack Infisical exports; prod only, no-op without `.env.infisical-auth`.                             |
 
-# Override the default stack list or order:
-# STACKS=(infrastructure applications tooling)
+> **Setting a list replaces the default — it does not append.** If you set
+> `NETWORKS=(my-net)` you lose `proxy` and `socket-proxy` unless you list them
+> too.
 
-# Override the external networks the CLI ensures before bringing stacks up.
-# Each entry may include extra `docker network create` flags after the name:
-# NETWORKS=(proxy "socket-proxy --internal")
-# NETWORKS_DEV=(mailpit)
+The values shown commented out in the example `infra.config.sh` mirror the
+defaults above for `STACKS`, `NETWORKS`, and `NETWORKS_DEV` — uncommenting them
+verbatim is a no-op. The `DEV_SHARED_SERVICES`, `BANNER`, and `SECRETS_*`
+samples are illustrative; their real defaults are empty / built-in.
 
-# Services that should be deduplicated across compose projects in dev: if any
-# one of these is already running in another project, this stack skips its own
-# copy and shares the running instance. Useful for host-port-bound services
-# like Traefik that ship in every project but can only run once locally.
-# DEV_SHARED_SERVICES=(traefik)
+`SECRETS_*` entry format:
 
-# Optional custom banner (otherwise a default one is used):
-# BANNER=$'\n  TCM Services\n'
-
-# Infisical machine-identity secret exports (prod only; no-op without
-# .env.infisical-auth). Each entry:
-#   "service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|output_path|exclude_keys"
-SECRETS_INFRASTRUCTURE=(
-  "traefik|TRAEFIK_CLIENT_ID|TRAEFIK_CLIENT_SECRET|infrastructure/traefik/.env|"
-)
-
-SECRETS_APPLICATIONS=()
-
-SECRETS_TOOLING=(
-  "tooling-mysql|TOOLING_MYSQL_CLIENT_ID|TOOLING_MYSQL_CLIENT_SECRET|tooling/mysql/.env|PORT HOST"
-  "kanbn|KANBN_CLIENT_ID|KANBN_CLIENT_SECRET|tooling/kanbn/.env|PORT HOST PGPASSWORD POSTGRES_DB POSTGRES_PASSWORD POSTGRES_USER"
-)
+```
+"service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|output_path|exclude_keys"
 ```
 
 ## Infisical auth file
 
-To enable prod secret export, create `docker/.env.infisical-auth` (gitignored):
+To enable prod secret export, fill in `docker/.env.infisical-auth` (created by
+the postinstall hook; make sure it is gitignored). Every value in the example
+file is a placeholder — there are no built-in defaults, you must supply real
+credentials:
 
 ```bash
-INFISICAL_HOST=https://infisical.example.com
-INFISICAL_PROJECT_ID=your-project-id
+INFISICAL_HOST=https://infisical.example.com   # placeholder
+INFISICAL_PROJECT_ID=your-project-id           # placeholder
 
 TRAEFIK_CLIENT_ID=...
 TRAEFIK_CLIENT_SECRET=...

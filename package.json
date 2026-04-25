@@ -1,12 +1,15 @@
 {
   "name": "@kevincam3/infra-cli",
   "version": "1.0.0",
+  "private": true,
   "description": "CLI for orchestrating per-project Docker Compose stacks (infrastructure, applications, tooling) with environment-aware secret export.",
+  "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/kevincam/infra-cli.git"
+  },
   "bin": {
     "infra": "./bin/infra.sh"
-  },
-  "scripts": {
-    "postinstall": "node scripts/postinstall.mjs"
   },
   "files": [
     "bin",
@@ -15,12 +18,20 @@
     "scripts",
     "README.md"
   ],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/kevincam/infra-cli.git"
+  "scripts": {
+    "postinstall": "node scripts/postinstall.mjs",
+    "prepare": "vp config"
   },
-  "license": "UNLICENSED",
-  "private": true,
+  "devDependencies": {
+    "@commitlint/cli": "^20.5.2",
+    "@commitlint/config-conventional": "^20.5.0",
+    "vite-plus": "^0.1.19"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
+  },
   "engines": {
     "node": ">=22"
   }
