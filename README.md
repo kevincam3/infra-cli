@@ -33,7 +33,7 @@ On install, an example `infra.config.sh` and `.env.infisical-auth` are dropped i
 Pin to a specific commit or tag if you want opt-in updates:
 
 ```json
-"@kevincam/infra-cli": "github:kevincam/infra-cli#v0.1.0"
+"@kevincam3/infra-cli": "github:kevincam3/infra-cli#v1.0.0"
 ```
 
 ## Expected project layout
@@ -70,7 +70,23 @@ infra help
 infra version
 ```
 
-`start` also cleans up exited containers, anonymous volumes, and older image versions that your current containers no longer reference.
+`--env` also accepts the long aliases `development` / `production`, the
+short form `-e`, and `--env=dev` syntax. `help` / `version` can also be
+invoked as `-h` / `--help` and `-v` / `--version`.
+
+### Cleanup on `start`
+
+After bringing stacks up, `start` runs three sweeps:
+
+- **Exited containers** — only those labelled with this project's compose
+  project name (`<PROJECT_NAME>-<env>-<stack>`).
+- **Anonymous volumes** — removed **globally**, not scoped to this
+  project. If you run other Docker stacks on the same host outside
+  infra-cli, their anonymous volumes will be removed too.
+- **Old images** — for every image repo this project's running containers
+  reference, older versions are removed. Images **newer** than the
+  currently-running version are preserved, since another project may be
+  using them.
 
 ## Per-project config: `infra.config.sh`
 
