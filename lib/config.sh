@@ -6,8 +6,14 @@
 # Variables a config file may set:
 #   PROJECT_NAME                  Compose project prefix. Default: package.json "name".
 #   STACKS                        Ordered list of stack dirs. Default: (infrastructure applications tooling).
-#   NETWORKS                      External networks to ensure on every run. Default: (proxy).
-#   NETWORKS_DEV                  External networks to ensure only when --env dev. Default: (mailpit).
+#   NETWORKS                      External networks to ensure on every run. Each entry is the
+#                                 network name optionally followed by docker-network-create flags
+#                                 (e.g. "socket-proxy --internal"). Default: (proxy "socket-proxy --internal").
+#   NETWORKS_DEV                  External networks to ensure only when --env dev. Same format as NETWORKS.
+#                                 Default: (mailpit).
+#   DEV_SHARED_SERVICES           Services that should be deduplicated across compose projects in dev:
+#                                 if one is already running in another project, this stack will skip it
+#                                 so both stacks share the running instance. Default: ().
 #   BANNER                        Multi-line string to print as the header banner. Default: built-in.
 #   SECRETS_<STACK>               Per-stack secret export list (see lib/secrets.sh for format).
 load_config() {
@@ -15,8 +21,9 @@ load_config() {
   local config_file="${project_dir}/infra.config.sh"
 
   STACKS=(infrastructure applications tooling)
-  NETWORKS=(proxy socket-proxy)
+  NETWORKS=(proxy "socket-proxy --internal")
   NETWORKS_DEV=(mailpit)
+  DEV_SHARED_SERVICES=()
   SECRETS_INFRASTRUCTURE=()
   SECRETS_APPLICATIONS=()
   SECRETS_TOOLING=()

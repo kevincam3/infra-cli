@@ -81,9 +81,16 @@ PROJECT_NAME="tcmsvc"
 # Override the default stack list or order:
 # STACKS=(infrastructure applications tooling)
 
-# Override the external networks the CLI ensures before bringing stacks up:
-# NETWORKS=(proxy)
+# Override the external networks the CLI ensures before bringing stacks up.
+# Each entry may include extra `docker network create` flags after the name:
+# NETWORKS=(proxy "socket-proxy --internal")
 # NETWORKS_DEV=(mailpit)
+
+# Services that should be deduplicated across compose projects in dev: if any
+# one of these is already running in another project, this stack skips its own
+# copy and shares the running instance. Useful for host-port-bound services
+# like Traefik that ship in every project but can only run once locally.
+# DEV_SHARED_SERVICES=(traefik)
 
 # Optional custom banner (otherwise a default one is used):
 # BANNER=$'\n  TCM Services\n'

@@ -48,8 +48,10 @@ Options:
 Configuration (optional ./infra.config.sh in CWD):
   PROJECT_NAME              Compose project prefix (defaults to package.json "name")
   STACKS                    Ordered list of stack dirs (default: infrastructure applications tooling)
-  NETWORKS                  External networks to ensure on every run (default: proxy)
+  NETWORKS                  External networks to ensure on every run; each entry may include
+                            docker-network-create flags (default: proxy "socket-proxy --internal")
   NETWORKS_DEV              External networks to ensure only in dev (default: mailpit)
+  DEV_SHARED_SERVICES       Services skipped in dev when already running in another compose project
   BANNER                    Multi-line header banner
   SECRETS_<STACK>           Per-stack Infisical secret exports (prod only)
 
@@ -125,12 +127,16 @@ case "$COMMAND" in
   stop)  COMPOSE_ACTION="down" ;;
 esac
 
+# Each NETWORKS entry is "<name> [docker-network-create flags...]" — split on whitespace
+# so flags like --internal reach `docker network create`.
 for net in "${NETWORKS[@]}"; do
-  ensure_network "$net"
+  read -ra net_args <<<"$net"
+  ensure_network "${net_args[@]}"
 done
 if [ "$ENVIRONMENT" = "dev" ]; then
   for net in "${NETWORKS_DEV[@]}"; do
-    ensure_network "$net"
+    read -ra net_args <<<"$net"
+    ensure_network "${net_args[@]}"
   done
 fi
 
