@@ -15,8 +15,8 @@
     "url": "git+https://github.com/kevincam/infra-cli.git"
   },
   "license": "UNLICENSED",
-  "private": false,
+  "private": true,
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   }
 }
