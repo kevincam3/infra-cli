@@ -9,7 +9,7 @@ Add to your project's `docker/package.json`:
 ```json
 {
   "devDependencies": {
-    "@kevincam/infra-cli": "github:kevincam/infra-cli"
+    "@kevincam3/infra-cli": "github:kevincam3/infra-cli"
   },
   "scripts": {
     "dev":       "infra start --env dev",
@@ -27,6 +27,8 @@ cd docker
 pnpm install
 pnpm run dev
 ```
+
+On install, an example `infra.config.sh` and `.env.infisical-auth` are dropped into the directory you ran `pnpm install` from (typically `docker/`). Existing files are never overwritten.
 
 Pin to a specific commit or tag if you want opt-in updates:
 

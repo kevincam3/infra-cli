@@ -5,9 +5,14 @@
   "bin": {
     "infra": "./bin/infra.sh"
   },
+  "scripts": {
+    "postinstall": "node scripts/postinstall.mjs"
+  },
   "files": [
     "bin",
     "lib",
+    "examples",
+    "scripts",
     "README.md"
   ],
   "repository": {
