@@ -1,3 +1,11 @@
+# [1.1.0](https://github.com/kevincam3/infra-cli/compare/v1.0.0...v1.1.0) (2026-04-26)
+
+### Features
+
+- **cli:** add ASCII art banner generation and workspace scaffolding for pnpm users ([bb6cc97](https://github.com/kevincam3/infra-cli/commit/bb6cc97f65ae9f36ea61822732c916f0df15f09e))
+- **docs:** add comprehensive architecture and usage documentation ([a14fbdd](https://github.com/kevincam3/infra-cli/commit/a14fbdd026d537ef753de6c0730671bd051e9d78))
+- **docs:** clarify CLI usage and update cleanup behavior in README ([9cc459e](https://github.com/kevincam3/infra-cli/commit/9cc459e0dc455f628c2f70f46e289f198d29a79d))
+
 # 1.0.0 (2026-04-25)
 
 ### Bug Fixes
