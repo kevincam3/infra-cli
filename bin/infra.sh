@@ -140,6 +140,14 @@ if [ "$ENVIRONMENT" = "dev" ]; then
   done
 fi
 
+# Optional pre-start hook for project-specific bootstrap (e.g. bringing up a
+# secrets backend before secret export runs). Define `infra_pre_start` in
+# infra.config.sh; it has access to PROJECT_DIR, PROJECT_NAME, ENVIRONMENT
+# and the logging helpers.
+if [ "$COMMAND" = "start" ] && declare -F infra_pre_start >/dev/null 2>&1; then
+  infra_pre_start
+fi
+
 for stack in "${STACKS[@]}"; do
   run_stack "$stack"
 done

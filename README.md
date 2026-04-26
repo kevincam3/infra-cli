@@ -102,6 +102,7 @@ supported setting commented out. Uncomment only what you need to override.
 | `DEV_SHARED_SERVICES`                                                 | `()` (empty)                            | Services to deduplicate across compose projects in dev.                                                  |
 | `BANNER`                                                              | Built-in ASCII art                      | Multi-line string printed as the header.                                                                 |
 | `SECRETS_INFRASTRUCTURE` / `SECRETS_APPLICATIONS` / `SECRETS_TOOLING` | `()` (empty)                            | Per-stack Infisical exports; prod only, no-op without `.env.infisical-auth`.                             |
+| `infra_pre_start`                                                     | undefined                               | Optional bash function. Called once on `start`, after networks are ensured and before any stack runs.    |
 
 > **Setting a list replaces the default — it does not append.** If you set
 > `NETWORKS=(my-net)` you lose `proxy` and `socket-proxy` unless you list them
@@ -116,6 +117,29 @@ samples are illustrative; their real defaults are empty / built-in.
 
 ```
 "service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|output_path|exclude_keys"
+```
+
+### Pre-start hook
+
+Define `infra_pre_start` in `infra.config.sh` to run project-specific bootstrap
+before the stack loop. Typical use case: bringing up a secrets backend so that
+the `SECRETS_*` export step has somewhere to authenticate against.
+
+The hook runs only on `start`, after networks are ensured and before any stack
+is touched. It has access to `PROJECT_DIR`, `PROJECT_NAME`, `ENVIRONMENT`, and
+the logging helpers (`section`, `info`, `success`, `error`). Gate on
+`$ENVIRONMENT` if the hook should only run in one environment.
+
+```bash
+infra_pre_start() {
+  [ "$ENVIRONMENT" = "prod" ] || return 0
+
+  section "🔧 Bootstrapping secrets backend"
+  docker compose -p "${PROJECT_NAME}-${ENVIRONMENT}-infrastructure" \
+    -f infrastructure/docker-compose.base.yml \
+    -f "infrastructure/docker-compose.${ENVIRONMENT}.yml" \
+    up -d --wait vault
+}
 ```
 
 ## Infisical auth file
