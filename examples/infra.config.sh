@@ -20,8 +20,8 @@
 # Useful for host-port-bound services like Traefik.
 # DEV_SHARED_SERVICES=(traefik)
 
-# Optional custom banner (otherwise a default one is used):
-# BANNER=$'\n  My Project\n'
+# Optional custom banner — plain text, converted to ASCII art automatically:
+# BANNER="My Project"
 
 # Infisical machine-identity secret exports (prod only; no-op without
 # .env.infisical-auth). Each entry:

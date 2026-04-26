@@ -23,6 +23,9 @@
     "prepare": "vp config",
     "release": "node scripts/release-preflight.mjs"
   },
+  "dependencies": {
+    "figlet": "^1.11.0"
+  },
   "devDependencies": {
     "@commitlint/cli": "^20.5.2",
     "@commitlint/config-conventional": "^20.5.0",

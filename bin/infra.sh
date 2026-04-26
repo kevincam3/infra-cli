@@ -52,7 +52,7 @@ Configuration (optional ./infra.config.sh in CWD):
                             docker-network-create flags (default: proxy "socket-proxy --internal")
   NETWORKS_DEV              External networks to ensure only in dev (default: mailpit)
   DEV_SHARED_SERVICES       Services skipped in dev when already running in another compose project
-  BANNER                    Multi-line header banner
+  BANNER                    Plain text converted to ASCII art banner
   SECRETS_<STACK>           Per-stack Infisical secret exports (prod only)
 
 Run from the directory containing the stack folders (typically your project's docker/).
@@ -109,7 +109,7 @@ load_config "$PROJECT_DIR"
 
 echo -e "\033[0;34m"
 if [ -n "${BANNER:-}" ]; then
-  printf '%s\n' "$BANNER"
+  node "$CLI_ROOT/lib/banner.mjs" "$BANNER" || printf '%s\n' "$BANNER"
 else
   cat <<'EOF'
    _        __

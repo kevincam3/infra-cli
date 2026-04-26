@@ -8,14 +8,14 @@ Add to your project's `docker/package.json`:
 
 ```json
 {
-  "devDependencies": {
-    "@kevincam3/infra-cli": "github:kevincam3/infra-cli"
-  },
   "scripts": {
     "dev": "infra start --env dev",
     "dev:down": "infra stop  --env dev",
     "prod": "infra start --env prod",
     "prod:down": "infra stop  --env prod"
+  },
+  "devDependencies": {
+    "@kevincam3/infra-cli": "github:kevincam3/infra-cli"
   }
 }
 ```
