@@ -1,3 +1,9 @@
+# [1.2.0](https://github.com/kevincam3/infra-cli/compare/v1.1.0...v1.2.0) (2026-04-26)
+
+### Features
+
+- **cli:** add optional pre-start hook for project-specific bootstrap ([ab9101f](https://github.com/kevincam3/infra-cli/commit/ab9101f5e93742b445adb68ea1b259ab47287152))
+
 # [1.1.0](https://github.com/kevincam3/infra-cli/compare/v1.0.0...v1.1.0) (2026-04-26)
 
 ### Features
