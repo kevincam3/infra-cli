@@ -21,7 +21,7 @@ load_config() {
   local config_file="${project_dir}/infra.config.sh"
 
   STACKS=(infrastructure applications tooling)
-  NETWORKS=(proxy "socket-proxy --internal")
+  NETWORKS=(proxy socket-proxy)
   NETWORKS_DEV=(mailpit)
   DEV_SHARED_SERVICES=()
   SECRETS_INFRASTRUCTURE=()
