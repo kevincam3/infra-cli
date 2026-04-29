@@ -27,7 +27,7 @@ export_stack_secrets() {
   array_name="SECRETS_$(echo "$stack" | tr '[:lower:]' '[:upper:]')"
 
   local -a entries=()
-  if declare -p "$array_name" >/dev/null 2>&1; then
+  if [[ -v "$array_name" ]]; then
     eval "entries=(\"\${${array_name}[@]}\")"
   fi
 
