@@ -28,7 +28,7 @@ pnpm install
 pnpm run dev
 ```
 
-On install, an example `infra.config.sh` and `.env.infisical-auth` are dropped into the directory you ran `pnpm install` from (typically `docker/`). Existing files are never overwritten.
+On install, an example `infra.config.sh`, `.env.infisical-auth.dev`, and `.env.infisical-auth.prod` are dropped into the directory you ran `pnpm install` from (typically `docker/`). Existing files are never overwritten.
 
 Pin to a specific commit or tag if you want opt-in updates:
 
@@ -44,7 +44,8 @@ Run `infra` from the directory that contains the stack folders (typically `docke
 docker/
   package.json                 # scripts call `infra ...`
   infra.config.sh              # optional per-project config (see below)
-  .env.infisical-auth          # optional; enables prod secret export
+  .env.infisical-auth.dev      # optional; enables dev secret export
+  .env.infisical-auth.prod     # optional; enables prod secret export
   infrastructure/
     docker-compose.base.yml
     docker-compose.dev.yml
@@ -101,7 +102,7 @@ supported setting commented out. Uncomment only what you need to override.
 | `NETWORKS_DEV`                                                        | `(mailpit)`                             | Ensured only on `--env dev`. Same format as `NETWORKS`.                                                  |
 | `DEV_SHARED_SERVICES`                                                 | `()` (empty)                            | Services to deduplicate across compose projects in dev.                                                  |
 | `BANNER`                                                              | Built-in ASCII art                      | Multi-line string printed as the header.                                                                 |
-| `SECRETS_INFRASTRUCTURE` / `SECRETS_APPLICATIONS` / `SECRETS_TOOLING` | `()` (empty)                            | Per-stack Infisical exports; prod only, no-op without `.env.infisical-auth`.                             |
+| `SECRETS_INFRASTRUCTURE` / `SECRETS_APPLICATIONS` / `SECRETS_TOOLING` | `()` (empty)                            | Per-stack Infisical exports; no-op without `.env.infisical-auth.<env>`.                                  |
 | `infra_pre_start`                                                     | undefined                               | Optional bash function. Called once on `start`, after networks are ensured and before any stack runs.    |
 
 > **Setting a list replaces the default — it does not append.** If you set
@@ -116,7 +117,7 @@ samples are illustrative; their real defaults are empty / built-in.
 `SECRETS_*` entry format:
 
 ```
-"service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|output_path|exclude_keys"
+"service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|exclude_keys"
 ```
 
 ### Pre-start hook
@@ -142,22 +143,33 @@ infra_pre_start() {
 }
 ```
 
-## Infisical auth file
+## Infisical auth files
 
-To enable prod secret export, fill in `docker/.env.infisical-auth` (created by
-the postinstall hook; make sure it is gitignored). Every value in the example
-file is a placeholder — there are no built-in defaults, you must supply real
-credentials:
+To enable secret export, fill in `docker/.env.infisical-auth.dev` and/or
+`docker/.env.infisical-auth.prod` (both created by the postinstall hook; make
+sure they are gitignored). The CLI sources the file that matches the `--env`
+flag, so dev and prod machine identities are always kept separate.
+
+Every value in the example files is a placeholder — there are no built-in
+defaults, you must supply real credentials:
 
 ```bash
-INFISICAL_HOST=https://infisical.example.com   # placeholder
-INFISICAL_PROJECT_ID=your-project-id           # placeholder
+# .env.infisical-auth.dev  (dev-scoped machine identities only)
+INFISICAL_HOST=https://infisical.example.com
+INFISICAL_PROJECT_ID=your-project-id
 
 TRAEFIK_CLIENT_ID=...
 TRAEFIK_CLIENT_SECRET=...
+# ...one pair per machine identity referenced in SECRETS_* arrays
+```
 
-TOOLING_MYSQL_CLIENT_ID=...
-TOOLING_MYSQL_CLIENT_SECRET=...
+```bash
+# .env.infisical-auth.prod  (prod-scoped machine identities only)
+INFISICAL_HOST=https://infisical.example.com
+INFISICAL_PROJECT_ID=your-project-id
+
+TRAEFIK_CLIENT_ID=...
+TRAEFIK_CLIENT_SECRET=...
 # ...one pair per machine identity referenced in SECRETS_* arrays
 ```
 

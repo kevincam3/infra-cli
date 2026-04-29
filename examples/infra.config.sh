@@ -24,12 +24,15 @@
 # BANNER="My Project"
 
 # Infisical machine-identity secret exports (prod only; no-op without
-# .env.infisical-auth). Each entry:
-#   "service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|output_path|exclude_keys"
+# .env.infisical-auth.<env>). Each entry:
+#   "service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|exclude_keys"
+# Secrets are injected into the shell environment at runtime; docker compose
+# inherits them. In your compose files, list consumed vars as bare key names
+# under `environment:` (no value) and docker compose will resolve them.
 # SECRETS_INFRASTRUCTURE=(
-#   "traefik|TRAEFIK_CLIENT_ID|TRAEFIK_CLIENT_SECRET|infrastructure/traefik/.env|"
+#   "traefik|TRAEFIK_CLIENT_ID|TRAEFIK_CLIENT_SECRET|"
 # )
 # SECRETS_APPLICATIONS=()
 # SECRETS_TOOLING=(
-#   "tooling-mysql|TOOLING_MYSQL_CLIENT_ID|TOOLING_MYSQL_CLIENT_SECRET|tooling/mysql/.env|PORT HOST"
+#   "tooling-mysql|TOOLING_MYSQL_CLIENT_ID|TOOLING_MYSQL_CLIENT_SECRET|PORT HOST"
 # )

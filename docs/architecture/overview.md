@@ -4,7 +4,7 @@
 (`@kevincam3/infra-cli`). It orchestrates per-project Docker Compose stacks
 across three layers — `infrastructure/`, `applications/`, `tooling/` — for
 two environments (`dev`, `prod`), with optional Infisical-backed secret
-export for prod.
+export for both.
 
 ## Components
 
@@ -14,7 +14,7 @@ bin/
 lib/
   logging.sh              # info / success / error / warn / section helpers
   config.sh               # loads ./infra.config.sh + applies defaults
-  secrets.sh              # Infisical secret export (prod only)
+  secrets.sh              # Infisical secret export (dev and prod)
   stacks.sh               # ensure_network, run_stack, dev shared-service dedup
   cleanup.sh              # exited containers, anonymous volumes, old images
 scripts/
@@ -22,7 +22,8 @@ scripts/
   release-preflight.mjs   # gates `pnpm release` and execs semantic-release
 examples/
   infra.config.sh         # template copied to the consumer on install
-  env.infisical-auth      # template copied to the consumer on install
+  env.infisical-auth.dev  # template copied to the consumer on install
+  env.infisical-auth.prod # template copied to the consumer on install
 ```
 
 `bin/infra.sh` `source`s every file in `lib/` at startup; library files
@@ -43,8 +44,9 @@ expose functions only and read globals set by the entrypoint
 5. **Iterate stacks** — for each entry in `STACKS`, `run_stack` skips
    silently if neither `<stack>/docker-compose.base.yml` nor
    `<stack>/docker-compose.<env>.yml` exists. Otherwise:
-   - **Prod only:** `export_stack_secrets` writes a `.env` per Infisical
-     machine identity listed in `SECRETS_<STACK>`.
+   - **Both envs:** `export_stack_secrets` fetches secrets via Infisical
+     for each machine identity listed in `SECRETS_<STACK>` and exports them
+     into the shell environment; docker compose inherits them.
    - **Dev only:** `_compute_explicit_services` filters out
      `DEV_SHARED_SERVICES` already running under another compose project,
      so multiple projects share a single host-port-bound instance.
@@ -57,8 +59,9 @@ expose functions only and read globals set by the entrypoint
 
 - Published as a GitHub-installable package; consumers add
   `@kevincam3/infra-cli` to a `docker/package.json` and pin to a tag.
-- `scripts/postinstall.mjs` copies `examples/infra.config.sh` and
-  `examples/env.infisical-auth` (renamed `.env.infisical-auth`) into
+- `scripts/postinstall.mjs` copies `examples/infra.config.sh`,
+  `examples/env.infisical-auth.dev` (as `.env.infisical-auth.dev`), and
+  `examples/env.infisical-auth.prod` (as `.env.infisical-auth.prod`) into
   `INIT_CWD` if absent. It is idempotent and never fails the install.
 
 ## Releases

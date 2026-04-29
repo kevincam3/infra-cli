@@ -29,7 +29,7 @@ run_stack() {
     return 0
   fi
 
-  if [ "$COMMAND" = "start" ] && [ "$ENVIRONMENT" = "prod" ]; then
+  if [ "$COMMAND" = "start" ]; then
     export_stack_secrets "$stack" "$PROJECT_DIR"
   fi
 

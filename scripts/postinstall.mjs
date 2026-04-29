@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// Drops example infra.config.sh and .env.infisical-auth into the consumer's
+// Drops example infra.config.sh, .env.infisical-auth.dev, and .env.infisical-auth.prod into the consumer's
 // project directory on install. Skips files that already exist so this is
 // safe to re-run. Never fails the install — worst case it logs a warning.
 //
@@ -94,7 +94,8 @@ try {
   const examplesDir = join(packageDir, "examples");
   const files = [
     { src: "infra.config.sh", dest: "infra.config.sh" },
-    { src: "env.infisical-auth", dest: ".env.infisical-auth" },
+    { src: "env.infisical-auth.dev", dest: ".env.infisical-auth.dev" },
+    { src: "env.infisical-auth.prod", dest: ".env.infisical-auth.prod" },
   ];
 
   // In pnpm workspaces, INIT_CWD is the workspace root even when --filter is
