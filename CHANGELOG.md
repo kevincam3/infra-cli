@@ -1,3 +1,22 @@
+# [2.0.0](https://github.com/kevincam3/infra-cli/compare/v1.2.0...v2.0.0) (2026-04-29)
+
+- feat!: inject Infisical secrets into shell env; split auth files per environment ([68f9c40](https://github.com/kevincam3/infra-cli/commit/68f9c40f62a1808d4de4170d4693d826f0742fa5))
+
+### Features
+
+- **config:** simplify network configuration in infra.config.sh ([ac01aea](https://github.com/kevincam3/infra-cli/commit/ac01aea227472328430389c3efd6d553871f7a52))
+- **secrets:** simplify secrets array check in `secrets.sh` ([4f20dbf](https://github.com/kevincam3/infra-cli/commit/4f20dbfbcb322ba96a30925e9968383f45d736ae))
+
+### BREAKING CHANGES
+
+- .env.infisical-auth is replaced by .env.infisical-auth.dev
+  and .env.infisical-auth.prod. The SECRETS\_\* entry format loses the
+  output_path field (was 5 pipe-separated fields, now 4). Compose files must
+  replace env_file: with environment: bare key names. See
+  docs/guides/secrets.md for migration steps.
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
 # [1.2.0](https://github.com/kevincam3/infra-cli/compare/v1.1.0...v1.2.0) (2026-04-26)
 
 ### Features
