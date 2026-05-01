@@ -1,3 +1,19 @@
+# [3.0.0](https://github.com/kevincam3/infra-cli/compare/v2.0.0...v3.0.0) (2026-05-01)
+
+- feat(secrets)!: auto-prefix exported secrets with service name ([01bc885](https://github.com/kevincam3/infra-cli/commit/01bc885a0ae5cbd9fc31740b7840d21321264704))
+
+### BREAKING CHANGES
+
+- all exported secrets are now prefixed with the service name
+  (e.g. DB_PASSWORD from "tooling-postgres" becomes TOOLING_POSTGRES_DB_PASSWORD).
+  Docker compose files must be updated to map prefixed env vars to the names
+  containers expect:
+
+  environment:
+  DB_PASSWORD: ${TOOLING_POSTGRES_DB_PASSWORD}
+
+Co-Authored-By: Claude Sonnet 4.6 <noreply@anthropic.com>
+
 # [2.0.0](https://github.com/kevincam3/infra-cli/compare/v1.2.0...v2.0.0) (2026-04-29)
 
 - feat!: inject Infisical secrets into shell env; split auth files per environment ([68f9c40](https://github.com/kevincam3/infra-cli/commit/68f9c40f62a1808d4de4170d4693d826f0742fa5))
