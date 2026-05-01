@@ -1,3 +1,9 @@
+## [3.0.1](https://github.com/kevincam3/infra-cli/compare/v3.0.0...v3.0.1) (2026-05-01)
+
+### Bug Fixes
+
+- **stacks:** suppress unset-variable warnings on stop ([e7f7132](https://github.com/kevincam3/infra-cli/commit/e7f71324f02227253b2f3dc9a9e7a0728afd77ea))
+
 # [3.0.0](https://github.com/kevincam3/infra-cli/compare/v2.0.0...v3.0.0) (2026-05-01)
 
 - feat(secrets)!: auto-prefix exported secrets with service name ([01bc885](https://github.com/kevincam3/infra-cli/commit/01bc885a0ae5cbd9fc31740b7840d21321264704))
