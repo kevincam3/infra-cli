@@ -37,8 +37,10 @@ run_stack() {
   echo
 
   local compose_args=(-p "${PROJECT_NAME}-${ENVIRONMENT}-${stack}")
-  [ -f "$base" ]     && compose_args+=(-f "$base")
-  [ -f "$env_file" ] && compose_args+=(-f "$env_file")
+  if [ "$COMMAND" = "start" ]; then
+    [ -f "$base" ]     && compose_args+=(-f "$base")
+    [ -f "$env_file" ] && compose_args+=(-f "$env_file")
+  fi
 
   local explicit_services=()
   _compute_explicit_services "$stack" explicit_services "${compose_args[@]}"
