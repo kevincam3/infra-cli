@@ -29,10 +29,6 @@ run_stack() {
     return 0
   fi
 
-  if [ "$COMMAND" = "start" ]; then
-    export_stack_secrets "$stack" "$PROJECT_DIR"
-  fi
-
   section "🚀  ${COMMAND^}ing ${ENVIRONMENT^^} ${stack^}"
   echo
 
@@ -45,7 +41,14 @@ run_stack() {
   local explicit_services=()
   _compute_explicit_services "$stack" explicit_services "${compose_args[@]}"
 
-  docker compose "${compose_args[@]}" $COMPOSE_ACTION "${explicit_services[@]}"
+  if [ "$COMMAND" = "start" ]; then
+    (
+      export_stack_secrets "$stack" "$PROJECT_DIR"
+      docker compose "${compose_args[@]}" $COMPOSE_ACTION "${explicit_services[@]}"
+    )
+  else
+    docker compose "${compose_args[@]}" $COMPOSE_ACTION "${explicit_services[@]}"
+  fi
 }
 
 # In dev, every project ships its own Traefik (etc.) because each runs on a separate
