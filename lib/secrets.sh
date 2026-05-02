@@ -62,8 +62,6 @@ export_stack_secrets() {
     return 1
   fi
 
-  section "🔐 Exporting ${stack^} Secrets"
-
   local entry service_name client_id_var client_secret_var exclude_keys
   local client_id client_secret token dotenv_content pattern
   for entry in "${entries[@]}"; do
