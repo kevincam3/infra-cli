@@ -1,3 +1,9 @@
+## [3.0.2](https://github.com/kevincam3/infra-cli/compare/v3.0.1...v3.0.2) (2026-05-02)
+
+### Bug Fixes
+
+- **stacks:** isolate secret exports to a subshell per stack ([d2edb38](https://github.com/kevincam3/infra-cli/commit/d2edb38a4a1a8e102fdad00f9c6cee1650ba92b5))
+
 ## [3.0.1](https://github.com/kevincam3/infra-cli/compare/v3.0.0...v3.0.1) (2026-05-01)
 
 ### Bug Fixes
