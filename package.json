@@ -1,6 +1,6 @@
 {
   "name": "@kevincam3/infra-cli",
-  "version": "3.0.2",
+  "version": "3.0.3",
   "private": true,
   "description": "CLI for orchestrating per-project Docker Compose stacks (infrastructure, applications, tooling) with environment-aware secret export.",
   "license": "UNLICENSED",
