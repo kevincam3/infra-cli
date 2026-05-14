@@ -33,8 +33,8 @@ jobs:
       - name: Override pnpm config for CI
         run: printf '\nloglevel=warn\nminimum-release-age=0\nengine-strict=false\n' >> .npmrc
 
-      - run: node --version && pnpm --version
+      - run: node --version && pnpm --version && pnpm config get loglevel
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install
 
       - run: pnpm exec semantic-release
