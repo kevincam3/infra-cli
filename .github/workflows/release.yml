@@ -30,6 +30,6 @@ jobs:
           node-version-file: package.json
           cache: pnpm
 
-      - run: pnpm install --frozen-lockfile
+      - run: pnpm install --frozen-lockfile --reporter=default
 
       - run: pnpm exec semantic-release
