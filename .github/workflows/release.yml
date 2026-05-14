@@ -13,6 +13,10 @@ jobs:
       issues: write # @semantic-release/github
       pull-requests: write # @semantic-release/github
 
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
     steps:
       - uses: actions/checkout@v6.0.2
         with:
@@ -29,6 +33,3 @@ jobs:
       - run: pnpm install --frozen-lockfile
 
       - run: pnpm exec semantic-release
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
