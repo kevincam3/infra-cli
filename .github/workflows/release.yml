@@ -16,8 +16,6 @@ jobs:
     env:
       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      NPM_CONFIG_LOGLEVEL: warn
-      NPM_CONFIG_MINIMUM_RELEASE_AGE: "0"
 
     steps:
       - uses: actions/checkout@v6.0.2
@@ -31,6 +29,11 @@ jobs:
         with:
           node-version-file: package.json
           cache: pnpm
+
+      - name: Override pnpm config for CI
+        run: printf '\nloglevel=warn\nminimum-release-age=0\n' >> .npmrc
+
+      - run: node --version && pnpm --version
 
       - run: pnpm install --frozen-lockfile
 
