@@ -1,3 +1,9 @@
+# [3.1.0](https://github.com/kevincam3/infra-cli/compare/v3.0.3...v3.1.0) (2026-05-14)
+
+### Features
+
+- **ci:** automate releases via GitHub Actions ([fe6a388](https://github.com/kevincam3/infra-cli/commit/fe6a3889afd05b02cd267aaac8c38c2128ad860d))
+
 ## [3.0.3](https://github.com/kevincam3/infra-cli/compare/v3.0.2...v3.0.3) (2026-05-02)
 
 ### Bug Fixes
