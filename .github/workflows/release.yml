@@ -27,11 +27,11 @@ jobs:
 
       - uses: actions/setup-node@v6.4.0
         with:
-          node-version-file: package.json
+          node-version: "22"
           cache: pnpm
 
       - name: Override pnpm config for CI
-        run: printf '\nloglevel=warn\nminimum-release-age=0\n' >> .npmrc
+        run: printf '\nloglevel=warn\nminimum-release-age=0\nengine-strict=false\n' >> .npmrc
 
       - run: node --version && pnpm --version
 
