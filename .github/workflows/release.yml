@@ -30,11 +30,10 @@ jobs:
           node-version: "22"
           cache: pnpm
 
-      - name: Override pnpm config for CI
-        run: printf '\nloglevel=warn\nminimum-release-age=0\nengine-strict=false\n' >> .npmrc
+      - name: Strip CI-incompatible pnpm-workspace settings
+        run: |
+          sed -i '/^loglevel:/d; /^minimumReleaseAge:/d; /^engineStrict:/d' pnpm-workspace.yaml
 
-      - run: node --version && pnpm --version && pnpm config get loglevel
-
-      - run: pnpm install
+      - run: pnpm install --frozen-lockfile
 
       - run: pnpm exec semantic-release
