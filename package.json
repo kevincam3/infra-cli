@@ -1,7 +1,6 @@
 {
   "name": "@kevincam3/infra-cli",
   "version": "3.0.3",
-  "private": true,
   "description": "CLI for orchestrating per-project Docker Compose stacks (infrastructure, applications, tooling) with environment-aware secret export.",
   "license": "UNLICENSED",
   "repository": {
@@ -18,10 +17,12 @@
     "scripts/postinstall.mjs",
     "README.md"
   ],
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
   "scripts": {
     "postinstall": "node scripts/postinstall.mjs",
-    "prepare": "vp config",
-    "release": "node scripts/release-preflight.mjs"
+    "prepare": "vp config"
   },
   "dependencies": {
     "figlet": "^1.11.0"
@@ -59,7 +60,7 @@
       [
         "@semantic-release/npm",
         {
-          "npmPublish": false
+          "npmPublish": true
         }
       ],
       [
