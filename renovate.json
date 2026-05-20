@@ -6,8 +6,7 @@
   "packageRules": [
     {
       "groupName": "trusted tooling",
-      "matchPackageNames": ["pnpm", "figlet", "vite-plus"],
-      "matchPackagePatterns": ["^@commitlint/", "^@semantic-release/"],
+      "matchPackageNames": ["^@commitlint/", "^@semantic-release/", "pnpm", "figlet", "vite-plus"],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
       "platformAutomerge": true,
