@@ -2,5 +2,14 @@
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "extends": ["config:recommended"],
   "assignees": ["kevincam3"],
-  "minimumReleaseAge": "2 days"
+  "minimumReleaseAge": "2 days",
+  "packageRules": [
+    {
+      "matchPackageNames": ["pnpm", "figlet", "^@commitlint/", "^@semantic-release/", "vite-plus"],
+      "matchUpdateTypes": ["patch", "minor"],
+      "automerge": true,
+      "platformAutomerge": true,
+      "rebaseWhen": "behind-base-branch"
+    }
+  ]
 }
