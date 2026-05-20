@@ -5,7 +5,8 @@
   "minimumReleaseAge": "2 days",
   "packageRules": [
     {
-      "matchPackageNames": ["pnpm", "figlet", "^@commitlint/", "^@semantic-release/", "vite-plus"],
+      "matchPackageNames": ["pnpm", "figlet", "vite-plus"],
+      "matchPackagePatterns": ["^@commitlint/", "^@semantic-release/"],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
       "platformAutomerge": true,
