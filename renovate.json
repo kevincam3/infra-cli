@@ -9,7 +9,6 @@
       "matchPackageNames": ["^@commitlint/", "^@semantic-release/", "pnpm", "figlet", "vite-plus"],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
-      "platformAutomerge": true,
       "rebaseWhen": "behind-base-branch"
     }
   ]
