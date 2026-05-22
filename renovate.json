@@ -3,6 +3,7 @@
   "extends": ["config:recommended"],
   "assignees": ["kevincam3"],
   "minimumReleaseAge": "2 days",
+  "mergeMethod": "rebase",
   "packageRules": [
     {
       "groupName": "trusted tooling",
