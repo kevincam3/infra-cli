@@ -1,0 +1,21 @@
+root = true
+
+# Make the editor itself write LF, UTF-8, and a trailing newline. This closes the
+# gap .gitattributes can't: a newly-written file sits in the working tree (and is
+# bind-mounted into containers) with whatever line endings the editor used, before
+# git ever normalizes it on commit/checkout. PhpStorm/JetBrains honor this natively.
+[*]
+charset = utf-8
+end_of_line = lf
+insert_final_newline = true
+trim_trailing_whitespace = true
+indent_style = space
+indent_size = 2
+
+# Shell scripts in this repo use 4-space indentation.
+[*.{sh,bash}]
+indent_size = 4
+
+# Don't strip trailing whitespace in Markdown (it's a hard line break).
+[*.md]
+trim_trailing_whitespace = false

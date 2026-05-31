@@ -6,7 +6,7 @@
   "automergeStrategy": "rebase",
   "packageRules": [
     {
-      "groupName": "trusted tooling",
+      "groupName": "trusted npm packages",
       "matchPackageNames": ["^@commitlint/", "^@semantic-release/", "pnpm", "figlet", "vite-plus"],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
