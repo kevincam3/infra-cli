@@ -1,9 +1,14 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended"],
+  "extends": ["config:recommended", ":configMigration"],
   "assignees": ["kevincam3"],
+  "schedule": ["before 4am on monday"],
   "minimumReleaseAge": "2 days",
   "automergeStrategy": "rebase",
+  "lockFileMaintenance": {
+    "enabled": true
+  },
+  "postUpdateOptions": ["pnpmDedupe"],
   "packageRules": [
     {
       "groupName": "trusted npm packages",
