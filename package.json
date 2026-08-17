@@ -22,7 +22,7 @@
   },
   "scripts": {
     "postinstall": "node scripts/postinstall.mjs",
-    "prepare": "vp config"
+    "prepare": "node -e \"process.env.CI || process.exit(1)\" || vp config"
   },
   "dependencies": {
     "figlet": "^1.11.0"
