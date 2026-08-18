@@ -4,6 +4,7 @@
   "assignees": ["kevincam3"],
   "schedule": ["before 4am on monday"],
   "minimumReleaseAge": "2 days",
+  "internalChecksFilter": "strict",
   "automergeStrategy": "rebase",
   "lockFileMaintenance": {
     "enabled": true
