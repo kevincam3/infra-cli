@@ -1,6 +1,5 @@
 overrides:
-  vite: npm:@voidzero-dev/vite-plus-core@latest
-  vitest: npm:@voidzero-dev/vite-plus-test@latest
+  vite@*: npm:@voidzero-dev/vite-plus-core@0.3.0
 loglevel: info
 minimumReleaseAge: 2880
 engineStrict: true
