@@ -3,6 +3,7 @@
   "extends": ["config:recommended", ":configMigration"],
   "assignees": ["kevincam3"],
   "schedule": ["before 4am on monday"],
+  "prHourlyLimit": 0,
   "minimumReleaseAge": "2 days",
   "internalChecksFilter": "strict",
   "automergeStrategy": "rebase",
