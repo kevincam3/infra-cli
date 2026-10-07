@@ -36,7 +36,7 @@ Breaking changes must be indicated either with a `!` after the type/scope (`feat
 
 ## Releasing
 
-Releases are automated: every push to `main` triggers `.github/workflows/release.yml`, which runs `pnpm exec semantic-release`. There is no local release command. Releases are driven entirely by conventional commits — `feat:` bumps minor, `fix:` bumps patch, `feat!:` / `BREAKING CHANGE:` footer bumps major; other types (`chore:`, `docs:`, …) publish nothing.
+Releases are automated: every push to `main` runs `.github/workflows/ci.yml`, whose `release` job runs `pnpm exec semantic-release` once the `check` job (`pnpm verify`) has passed. There is no local release command. Releases are driven entirely by conventional commits — `feat:` bumps minor, `fix:` bumps patch, `feat!:` / `BREAKING CHANGE:` footer bumps major; other types (`chore:`, `docs:`, …) publish nothing.
 
 When a release is due, semantic-release (configured under `release` in `package.json`) updates `CHANGELOG.md` and the `package.json` version, publishes `@kevincam3/infra-cli` to GitHub Packages, commits both files as `chore(release): X.Y.Z [skip ci]`, and creates the tag and GitHub Release.
 

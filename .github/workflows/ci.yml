@@ -8,10 +8,12 @@ on:
 permissions:
   contents: read
 
-# A newer push to the same PR or branch supersedes the run in progress.
+# A newer push to the same PR supersedes the run in progress. Runs on main are
+# never cancelled, because they may be in the middle of a release; they queue
+# behind each other instead.
 concurrency:
   group: ci-${{ github.ref }}
-  cancel-in-progress: true
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   check:
@@ -33,7 +35,7 @@ jobs:
           node-version-file: package.json
           cache: pnpm
 
-      # Same preparation as release.yml.
+      # pnpm rejects or misbehaves on these local-only settings in CI.
       - name: Strip CI-incompatible pnpm-workspace settings
         run: |
           sed -i '/^loglevel:/d; /^minimumReleaseAge:/d; /^engineStrict:/d' pnpm-workspace.yaml
@@ -51,3 +53,43 @@ jobs:
       #   test       — no `test` script exists yet; starts running once one does
       - name: Verify
         run: pnpm verify
+
+  # Publishes with semantic-release, but only for pushes to main and only once
+  # `check` has passed.
+  release:
+    needs: check
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: write # tag + version-bump commit
+      packages: write # publish to GitHub Packages
+      issues: write # @semantic-release/github
+      pull-requests: write # @semantic-release/github
+
+    env:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      NPM_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    steps:
+      - uses: actions/checkout@v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+
+      - uses: pnpm/action-setup@v6.1.0
+
+      - uses: actions/setup-node@v7.0.0
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      - name: Strip CI-incompatible pnpm-workspace settings
+        run: |
+          sed -i '/^loglevel:/d; /^minimumReleaseAge:/d; /^engineStrict:/d' pnpm-workspace.yaml
+
+      # --ignore-scripts: `prepare` runs `vp config` (local git hooks only) and
+      # `postinstall` scaffolds consumer config files — neither is wanted in CI.
+      - run: pnpm install --frozen-lockfile --ignore-scripts
+
+      - run: pnpm exec semantic-release

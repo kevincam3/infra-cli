@@ -65,9 +65,10 @@ expose functions only and read globals set by the entrypoint
 
 ## Releases
 
-- Every push to `main` triggers `.github/workflows/release.yml`, which runs
-  `pnpm exec semantic-release` with the workflow's `GITHUB_TOKEN`. There is
-  no local release command.
+- Every push to `main` runs `.github/workflows/ci.yml`. Its `release` job
+  runs `pnpm exec semantic-release` with the workflow's `GITHUB_TOKEN`, but
+  only after the `check` job (`pnpm verify`) has passed. There is no local
+  release command.
 - Conventional Commits drive version bumps via
   `@semantic-release/commit-analyzer`; `@semantic-release/npm` publishes the
   package to GitHub Packages; `@semantic-release/git` commits

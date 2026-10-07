@@ -1,8 +1,9 @@
 # Releasing infra-cli
 
-Releases are fully automated. Every push to `main` triggers
-`.github/workflows/release.yml`, which runs semantic-release. There is no
-local release command and nothing to run by hand.
+Releases are fully automated. Every push to `main` runs
+`.github/workflows/ci.yml`: the `check` job runs `pnpm verify`, and once it
+passes the `release` job runs semantic-release. There is no local release
+command and nothing to run by hand.
 
 ## What triggers a release
 
@@ -17,7 +18,7 @@ and decides the version bump:
 If none of the new commits warrant a release, the workflow still runs and
 succeeds, but publishes nothing.
 
-## What the workflow does
+## What the release job does
 
 1. Checks out the full history (`fetch-depth: 0`) so semantic-release can
    find the last tag.
@@ -44,8 +45,10 @@ semantic-release (configured under `release` in `package.json`) then:
 - `pnpm verify` passes. The `pre-merge-commit` and `pre-push` hooks run it
   automatically, and the `ci` workflow runs it again on GitHub.
 
-The `ci` and `Release` workflows both start on the same push and run
-independently: the release does not wait for `ci` to pass.
+If `check` fails, the `release` job is skipped and nothing is published.
+Re-running the failed job from the Actions UI (or `gh run rerun <id>
+--failed`) lets the release continue once it passes. Runs on `main` are
+never cancelled by a newer push; they queue behind each other.
 
 ## After a release
 
@@ -62,5 +65,5 @@ breaking changes trigger releases by default.
 landed on `origin/main` after your last pull. `git pull --rebase` and push
 again.
 
-**Checking a run** — `gh run list --workflow Release` lists recent runs;
+**Checking a run** — `gh run list --workflow ci --branch main` lists recent runs;
 `gh run view <id> --log` shows the semantic-release output.
