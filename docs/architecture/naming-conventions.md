@@ -8,7 +8,7 @@ unless there is a deliberate reason to diverge.
 | Kind                       | Convention                                        | Examples                                                                       |
 | -------------------------- | ------------------------------------------------- | ------------------------------------------------------------------------------ |
 | Bash source files          | `kebab-case.sh` (single-word here, but lowercase) | `logging.sh`, `secrets.sh`, `cleanup.sh`                                       |
-| Node scripts               | `kebab-case.mjs`                                  | `release-preflight.mjs`, `postinstall.mjs`                                     |
+| Node scripts               | `kebab-case.mjs`                                  | `postinstall.mjs`                                                              |
 | Top-level dirs             | lowercase, single-word                            | `bin/`, `lib/`, `scripts/`, `examples/`, `docs/`                               |
 | Stack dirs (consumer side) | lowercase, single-word                            | `infrastructure/`, `applications/`, `tooling/`                                 |
 | Compose files              | `docker-compose.<layer>.yml`                      | `docker-compose.base.yml`, `docker-compose.dev.yml`, `docker-compose.prod.yml` |
@@ -35,16 +35,15 @@ they rely on the caller's options.
 
 ## JavaScript (Node scripts)
 
-| Kind                | Convention                       | Examples                                                 |
-| ------------------- | -------------------------------- | -------------------------------------------------------- |
-| Top-level constants | `UPPER_SNAKE_CASE`               | `RELEASE_BRANCH`, `GH_ACCOUNT`                           |
-| Variables           | `camelCase`                      | `githubToken`, `targetDir`, `examplesDir`, `lastTag`     |
-| Helper functions    | `camelCase` (often arrow consts) | `sh`, `fail`                                             |
-| Imports             | Node namespace prefix preferred  | `node:child_process`, `node:fs`, `node:path`, `node:url` |
+| Kind                | Convention                        | Examples                                            |
+| ------------------- | --------------------------------- | --------------------------------------------------- |
+| Top-level constants | `UPPER_SNAKE_CASE`                | `PKG_NAME`                                          |
+| Variables           | `camelCase`                       | `targetDir`, `examplesDir`, `initCwd`, `packageDir` |
+| Helper functions    | `camelCase` function declarations | `hasDep`, `scaffoldTo`, `expandGlob`                |
+| Imports             | Node namespace prefix preferred   | `node:fs`, `node:path`, `node:url`                  |
 
-Strings use double quotes in `release-preflight.mjs` and single quotes in
-`postinstall.mjs` — the codebase isn't consistent here yet. Match the
-file you're editing.
+Strings use double quotes. Formatting is enforced by `vp check --fix`,
+which the `pre-commit` hook runs on staged files.
 
 ## Compose project naming
 
@@ -73,14 +72,13 @@ canonical values used internally and in compose filenames:
 Each entry in `SECRETS_<STACK>` is a single pipe-delimited string:
 
 ```
-"service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|output_path|exclude_keys"
+"service_name|CLIENT_ID_VAR|CLIENT_SECRET_VAR|exclude_keys"
 ```
 
 - `service_name` — lowercase, kebab-case (e.g. `traefik`, `tooling-mysql`).
 - `CLIENT_ID_VAR` / `CLIENT_SECRET_VAR` — env-var **names** (not values),
   conventionally `<SERVICE>_CLIENT_ID` / `<SERVICE>_CLIENT_SECRET` in
   `UPPER_SNAKE_CASE`.
-- `output_path` — relative to the project dir, e.g. `tooling/mysql/.env`.
 - `exclude_keys` — space-separated list of keys to strip; may be empty.
 
 ## Logging output
@@ -102,4 +100,4 @@ Section titles use Title Case and lead with an emoji that signals intent:
 
 - Scoped under `@kevincam3/`.
 - Single bin entry: `infra` → `./bin/infra.sh`.
-- Engines: Node `>=22`.
+- Engines: Node `^24`, pnpm `^12.0.0`.

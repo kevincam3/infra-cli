@@ -1,75 +1,66 @@
 # Releasing infra-cli
 
-Releases are cut locally with `pnpm release` from the `main` branch.
-There is no CI publish step.
+Releases are fully automated. Every push to `main` triggers
+`.github/workflows/release.yml`, which runs semantic-release. There is no
+local release command and nothing to run by hand.
 
-## Prerequisites
+## What triggers a release
 
-- `pnpm install` has run (semantic-release lives in `devDependencies`).
-- You're authenticated as **kevincam3** in `gh`:
-  ```bash
-  gh auth status
-  ```
-  If not, `gh auth login` and pick the `kevincam3` account. The preflight
-  script pulls the token automatically via `gh auth token --user kevincam3`,
-  so you do not need to set `GITHUB_TOKEN` yourself.
-- Working tree is clean and `main` is at parity with `origin/main`.
-- All commits since the last tag follow Conventional Commits — that's how
-  semantic-release decides the version bump:
-  - `fix:` → patch
-  - `feat:` → minor
-  - `feat!:` or `BREAKING CHANGE:` footer → major
-  - `chore:`, `docs:`, `refactor:`, `test:`, etc. → no release
+semantic-release reads the Conventional Commits pushed since the last tag
+and decides the version bump:
 
-## Cutting the release
+- `fix:` → patch
+- `feat:` → minor
+- `feat!:` or `BREAKING CHANGE:` footer → major
+- `chore:`, `docs:`, `refactor:`, `test:`, etc. → no release
 
-```bash
-pnpm release
-```
+If none of the new commits warrant a release, the workflow still runs and
+succeeds, but publishes nothing.
 
-The preflight script will:
+## What the workflow does
 
-1. Resolve `GITHUB_TOKEN` (env var if set, otherwise `gh`).
-2. Verify branch is `main`, tree is clean, and you're not behind `origin`.
-3. Print the commits since the last tag and prompt:
-   ```
-   Proceed with release? [y/N]
-   ```
-4. On `y`, exec `pnpm exec semantic-release --no-ci` with the token
-   injected into its environment.
+1. Checks out the full history (`fetch-depth: 0`) so semantic-release can
+   find the last tag.
+2. Installs pnpm and Node at the versions pinned in `package.json`.
+3. Strips the `pnpm-workspace.yaml` settings that do not work in CI and runs
+   `pnpm install --frozen-lockfile --ignore-scripts`.
+4. Runs `pnpm exec semantic-release`, authenticated with the workflow's
+   built-in `GITHUB_TOKEN`. No personal token or `gh` login is involved.
 
-semantic-release then:
+semantic-release (configured under `release` in `package.json`) then:
 
 - Computes the next version from commit history.
 - Generates the changelog into `CHANGELOG.md`.
-- Updates `package.json` version (no npm publish — `npmPublish: false`).
-- Commits both files with `chore(release): X.Y.Z [skip ci]`.
+- Updates the `package.json` version and publishes `@kevincam3/infra-cli`
+  to GitHub Packages.
+- Commits both files with `chore(release): X.Y.Z [skip ci]` and pushes the
+  commit to `main`.
 - Pushes the tag and creates a GitHub Release with notes.
 
-## Aborting
+## Before pushing to main
 
-Answering anything other than `y` / `yes` at the prompt aborts before any
-git or GitHub state changes. The preflight also aborts (with a
-descriptive error) on any of:
+- All commits follow Conventional Commits; the `commit-msg` hook enforces
+  this with commitlint.
+- `pnpm verify` passes. The `pre-merge-commit` and `pre-push` hooks run it
+  automatically, and the `ci` workflow runs it again on GitHub.
 
-- Missing `GITHUB_TOKEN` and no `gh` token for `kevincam3`.
-- Wrong branch.
-- Dirty working tree (uncommitted or untracked files).
-- Local `main` behind `origin/main`.
-- No new commits since the last tag.
+The `ci` and `Release` workflows both start on the same push and run
+independently: the release does not wait for `ci` to pass.
+
+## After a release
+
+The release commit is pushed to `main` by the workflow, so local `main` is
+one commit behind afterwards. Run `git pull` before the next push.
 
 ## Troubleshooting
 
-**"no oauth token found for github.com account 'kevincam3'"** — run
-`gh auth login`, choose `github.com`, HTTPS, and authenticate as
-**kevincam3**. If you have multiple accounts, `gh auth switch --user kevincam3`
-makes it active (not strictly required since the script targets the user
-explicitly).
+**The workflow succeeded but nothing was released** — the commit subjects
+since the last tag are not release-worthy. Only `fix:`, `feat:`, and
+breaking changes trigger releases by default.
 
-**"Process finished with exit code 1" trailing the output** — that's
-PhpStorm's run console, not the script. Run `pnpm release` from a regular
-terminal (or PhpStorm's terminal panel) to avoid it.
+**The push to `main` is rejected as non-fast-forward** — a release commit
+landed on `origin/main` after your last pull. `git pull --rebase` and push
+again.
 
-**semantic-release says "no release" even though you committed** — your
-commit subjects are likely not Conventional. Only `fix:`, `feat:`, and
-breaking-change footers trigger releases by default.
+**Checking a run** — `gh run list --workflow Release` lists recent runs;
+`gh run view <id> --log` shows the semantic-release output.

@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## What this repo is
 
-A CLI tool (`infra`) consumed by other projects as an npm package (`github:kevincam3/infra-cli`). It orchestrates Docker Compose stacks across three layers (`infrastructure/`, `applications/`, `tooling/`) with environment-aware secret injection via Infisical. The CLI is pure bash; the only Node.js pieces are the banner renderer, postinstall scaffolding, and release tooling.
+A CLI tool (`infra`) consumed by other projects as an npm package (`github:kevincam3/infra-cli`). It orchestrates Docker Compose stacks across three layers (`infrastructure/`, `applications/`, `tooling/`) with environment-aware secret injection via Infisical. The CLI is pure bash; the only Node.js pieces are the banner renderer and postinstall scaffolding.
 
 ## Commands
 
@@ -12,7 +12,6 @@ A CLI tool (`infra`) consumed by other projects as an npm package (`github:kevin
 pnpm install          # install dev dependencies
 pnpm run prepare      # configure vite-plus (runs vp config — sets up git hooks)
 pnpm verify           # everything CI runs: typecheck, shellcheck, test (if present)
-pnpm release          # interactive release via semantic-release (must be on main, clean tree)
 ```
 
 There are no tests and no build step — the bash scripts run directly.
@@ -37,7 +36,9 @@ Breaking changes must be indicated either with a `!` after the type/scope (`feat
 
 ## Releasing
 
-`pnpm release` runs `scripts/release-preflight.mjs`, which validates branch/tree state, shows commits since the last tag, and prompts before executing semantic-release. Releases are driven entirely by conventional commits — `feat:` bumps minor, `fix:` bumps patch, `feat!:` / `BREAKING CHANGE:` footer bumps major.
+Releases are automated: every push to `main` triggers `.github/workflows/release.yml`, which runs `pnpm exec semantic-release`. There is no local release command. Releases are driven entirely by conventional commits — `feat:` bumps minor, `fix:` bumps patch, `feat!:` / `BREAKING CHANGE:` footer bumps major; other types (`chore:`, `docs:`, …) publish nothing.
+
+When a release is due, semantic-release (configured under `release` in `package.json`) updates `CHANGELOG.md` and the `package.json` version, publishes `@kevincam3/infra-cli` to GitHub Packages, commits both files as `chore(release): X.Y.Z [skip ci]`, and creates the tag and GitHub Release.
 
 Commits must pass commitlint (`@commitlint/config-conventional`), enforced via the `commit-msg` git hook installed by vite-plus.
 

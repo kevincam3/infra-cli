@@ -19,7 +19,6 @@ lib/
   cleanup.sh              # exited containers, anonymous volumes, old images
 scripts/
   postinstall.mjs         # scaffolds example config files into INIT_CWD
-  release-preflight.mjs   # gates `pnpm release` and execs semantic-release
 examples/
   infra.config.sh         # template copied to the consumer on install
   env.infisical-auth.dev  # template copied to the consumer on install
@@ -66,15 +65,15 @@ expose functions only and read globals set by the entrypoint
 
 ## Releases
 
-- `pnpm release` runs `scripts/release-preflight.mjs`, which:
-  1. Resolves `GITHUB_TOKEN` from env or `gh auth token --user kevincam3`.
-  2. Verifies branch (`main`), clean tree, and parity with `origin/main`.
-  3. Lists commits since the last tag and prompts for confirmation.
-  4. Execs `pnpm exec semantic-release --no-ci` with `GITHUB_TOKEN` injected.
+- Every push to `main` triggers `.github/workflows/release.yml`, which runs
+  `pnpm exec semantic-release` with the workflow's `GITHUB_TOKEN`. There is
+  no local release command.
 - Conventional Commits drive version bumps via
-  `@semantic-release/commit-analyzer`; `@semantic-release/git` commits
+  `@semantic-release/commit-analyzer`; `@semantic-release/npm` publishes the
+  package to GitHub Packages; `@semantic-release/git` commits
   `package.json` + `CHANGELOG.md`; `@semantic-release/github` cuts the
-  release. npm publish is disabled (`npmPublish: false`).
+  release.
+- See `docs/guides/releasing.md` for the full flow.
 
 ## Tooling
 
