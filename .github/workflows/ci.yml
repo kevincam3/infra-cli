@@ -1,0 +1,56 @@
+name: ci
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+# A newer push to the same PR or branch supersedes the run in progress.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      # Reads the pnpm version from `packageManager` in package.json.
+      - name: Install pnpm
+        uses: pnpm/action-setup@v6
+
+      # Reads the Node version from `engines.node` in package.json.
+      - name: Install node
+        uses: actions/setup-node@v7
+        with:
+          node-version-file: package.json
+          cache: pnpm
+
+      # Same preparation as release.yml.
+      - name: Strip CI-incompatible pnpm-workspace settings
+        run: |
+          sed -i '/^loglevel:/d; /^minimumReleaseAge:/d; /^engineStrict:/d' pnpm-workspace.yaml
+
+      # --ignore-scripts: `prepare` runs `vp config` (local git hooks only) and
+      # `postinstall` scaffolds consumer config files — neither is wanted in CI.
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile --ignore-scripts
+
+      # Lints the JS/TS files and syntax-checks every shell script.
+      - name: Typecheck
+        run: pnpm typecheck
+
+      # Runs the pinned koalaman/shellcheck image over bin/ and lib/.
+      - name: ShellCheck
+        run: pnpm shellcheck
+
+      # No `test` script exists yet; this starts running once one does.
+      - name: Test
+        run: pnpm run --if-present test

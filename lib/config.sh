@@ -16,6 +16,7 @@
 #                                 so both stacks share the running instance. Default: ().
 #   BANNER                        Multi-line string to print as the header banner. Default: built-in.
 #   SECRETS_<STACK>               Per-stack secret export list (see lib/secrets.sh for format).
+# shellcheck disable=SC2034 # these globals are read by bin/infra.sh and the other lib/ files
 load_config() {
   local project_dir="${1:-$(pwd)}"
   local config_file="${project_dir}/infra.config.sh"

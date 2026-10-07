@@ -1,0 +1,4 @@
+# Resolve `# shellcheck source=` paths relative to the script that declares them,
+# and follow them, so bin/infra.sh and everything it sources are checked as one program.
+source-path=SCRIPTDIR
+external-sources=true

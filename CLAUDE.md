@@ -75,3 +75,7 @@ environment:
 ## Postinstall scaffolding
 
 `scripts/postinstall.mjs` runs when a consumer installs the package. It copies `examples/infra.config.sh`, `examples/env.infisical-auth.dev`, and `examples/env.infisical-auth.prod` into the consumer's directory (skipping files that already exist). In pnpm workspaces it detects the correct sub-package via `pnpm-workspace.yaml`.
+
+## Plane
+
+Work for this repo is tracked in Plane: workspace `kev-services` (MCP server `plane-kev-services`), project `INFRACLI` — Infra cli (project id `d3464f7b-408e-4b86-b6ae-f44c6b25ba24`). Use that workspace and project for any Plane read or update from this repo without asking which one.

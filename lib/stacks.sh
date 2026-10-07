@@ -44,9 +44,11 @@ run_stack() {
   if [ "$COMMAND" = "start" ]; then
     (
       export_stack_secrets "$stack" "$PROJECT_DIR"
+      # shellcheck disable=SC2086 # COMPOSE_ACTION is word-split on purpose ("up -d --wait")
       docker compose "${compose_args[@]}" $COMPOSE_ACTION "${explicit_services[@]}"
     )
   else
+    # shellcheck disable=SC2086 # COMPOSE_ACTION is word-split on purpose ("up -d --wait")
     docker compose "${compose_args[@]}" $COMPOSE_ACTION "${explicit_services[@]}"
   fi
 }
