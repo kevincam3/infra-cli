@@ -12,7 +12,7 @@ unless there is a deliberate reason to diverge.
 | Top-level dirs             | lowercase, single-word                            | `bin/`, `lib/`, `scripts/`, `examples/`, `docs/`                               |
 | Stack dirs (consumer side) | lowercase, single-word                            | `infrastructure/`, `applications/`, `tooling/`                                 |
 | Compose files              | `docker-compose.<layer>.yml`                      | `docker-compose.base.yml`, `docker-compose.dev.yml`, `docker-compose.prod.yml` |
-| Generated hook shims       | inside `.vite-hooks/_/` (gitignored)              | `pre-commit`, `commit-msg`                                                     |
+| Generated hook shims       | inside `.vite-hooks/_/` (gitignored)              | `pre-commit`, `commit-msg`, `pre-merge-commit`, `pre-push`                     |
 
 `.mjs` is required for the Node scripts because the package has no
 `"type": "module"` field; the extension forces ESM parsing.

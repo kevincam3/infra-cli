@@ -24,7 +24,8 @@
     "postinstall": "node scripts/postinstall.mjs",
     "prepare": "node -e \"process.env.CI || process.exit(1)\" || vp config",
     "shellcheck": "docker run --rm -v \"$PWD:/mnt:ro\" -w /mnt koalaman/shellcheck:v0.11.0 bin/*.sh lib/*.sh",
-    "typecheck": "vp lint && for f in bin/*.sh lib/*.sh; do bash -n \"$f\" || exit 1; done"
+    "typecheck": "vp lint && for f in bin/*.sh lib/*.sh; do bash -n \"$f\" || exit 1; done",
+    "verify": "pnpm typecheck && pnpm shellcheck && pnpm run --if-present test"
   },
   "dependencies": {
     "figlet": "^1.11.0"

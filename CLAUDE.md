@@ -11,10 +11,13 @@ A CLI tool (`infra`) consumed by other projects as an npm package (`github:kevin
 ```bash
 pnpm install          # install dev dependencies
 pnpm run prepare      # configure vite-plus (runs vp config — sets up git hooks)
+pnpm verify           # everything CI runs: typecheck, shellcheck, test (if present)
 pnpm release          # interactive release via semantic-release (must be on main, clean tree)
 ```
 
 There are no tests and no build step — the bash scripts run directly.
+
+`pnpm verify` is the single script the CI workflow runs, and the `pre-merge-commit` and `pre-push` hooks in `.vite-hooks/` run it as well. Add new checks to `verify` in `package.json` rather than as workflow steps, so CI and local merges stay identical. `shellcheck` needs Docker running.
 
 ## Commits
 

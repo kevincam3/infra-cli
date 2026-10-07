@@ -82,3 +82,7 @@ expose functions only and read globals set by the entrypoint
   hook shims into `.vite-hooks/_/` via the `prepare` script.
 - **commitlint** (`@commitlint/config-conventional`) runs from the
   `commit-msg` hook to enforce Conventional Commit subjects.
+- **`pnpm verify`** (`typecheck`, `shellcheck`, then `test` if present) is
+  the one script the CI workflow runs. The `pre-merge-commit` and `pre-push`
+  hooks run it too, so a local merge is held to the same checks as CI. New
+  checks go into `verify`, not into the workflow.

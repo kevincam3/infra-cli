@@ -43,14 +43,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile --ignore-scripts
 
-      # Lints the JS/TS files and syntax-checks every shell script.
-      - name: Typecheck
-        run: pnpm typecheck
-
-      # Runs the pinned koalaman/shellcheck image over bin/ and lib/.
-      - name: ShellCheck
-        run: pnpm shellcheck
-
-      # No `test` script exists yet; this starts running once one does.
-      - name: Test
-        run: pnpm run --if-present test
+      # The same script the local pre-merge-commit and pre-push hooks run
+      # (.vite-hooks/), so CI and local merges cannot drift apart. Add new checks
+      # to `verify` in package.json, not as steps here.
+      #   typecheck  — lints the JS/TS files and syntax-checks every shell script
+      #   shellcheck — runs the pinned koalaman/shellcheck image over bin/ and lib/
+      #   test       — no `test` script exists yet; starts running once one does
+      - name: Verify
+        run: pnpm verify
