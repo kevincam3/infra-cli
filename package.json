@@ -23,7 +23,7 @@
   "scripts": {
     "postinstall": "node scripts/postinstall.mjs",
     "prepare": "node -e \"process.env.CI || process.exit(1)\" || vp config",
-    "shellcheck": "docker run --rm -v \"$PWD:/mnt:ro\" -w /mnt koalaman/shellcheck:v0.11.0 bin/*.sh lib/*.sh",
+    "shellcheck": "img=koalaman/shellcheck:v0.11.0; docker image inspect \"$img\" >/dev/null 2>&1 || for i in 1 2 3; do docker pull -q \"$img\" && break; [ \"$i\" = 3 ] && exit 1; echo \"docker pull failed (attempt $i/3), retrying in 10s\" >&2; sleep 10; done; docker run --rm -v \"$PWD:/mnt:ro\" -w /mnt \"$img\" bin/*.sh lib/*.sh",
     "typecheck": "vp lint && for f in bin/*.sh lib/*.sh; do bash -n \"$f\" || exit 1; done",
     "verify": "pnpm typecheck && pnpm shellcheck && pnpm run --if-present test"
   },
