@@ -14,7 +14,14 @@
   "packageRules": [
     {
       "groupName": "trusted npm packages",
-      "matchPackageNames": ["^@commitlint/", "^@semantic-release/", "pnpm", "figlet", "vite-plus"],
+      "matchPackageNames": [
+        "@commitlint/**",
+        "@semantic-release/**",
+        "pnpm",
+        "figlet",
+        "vite-plus",
+        "@voidzero-dev/vite-plus-core"
+      ],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
       "rebaseWhen": "behind-base-branch"
