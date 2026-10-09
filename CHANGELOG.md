@@ -1,3 +1,10 @@
+# [3.2.0](https://github.com/kevincam3/infra-cli/compare/v3.1.0...v3.2.0) (2026-10-09)
+
+
+### Features
+
+* **hosts:** add `infra hosts`, the hostname to server map ([1aa7624](https://github.com/kevincam3/infra-cli/commit/1aa7624bab80bcfdec67810b9ef8daa7ce609608))
+
 # [3.1.0](https://github.com/kevincam3/infra-cli/compare/v3.0.3...v3.1.0) (2026-05-14)
 
 ### Features
