@@ -24,6 +24,7 @@
       ],
       "matchUpdateTypes": ["patch", "minor"],
       "automerge": true,
+      "automergeType": "branch",
       "rebaseWhen": "behind-base-branch"
     }
   ]

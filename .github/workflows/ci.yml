@@ -2,8 +2,11 @@ name: ci
 
 on:
   pull_request:
+  # renovate/trusted-npm-packages is the branch of the "trusted npm packages"
+  # group in renovate.json. Renovate automerges it without opening a PR, so the
+  # checks have to run on the branch push itself.
   push:
-    branches: [main]
+    branches: [main, renovate/trusted-npm-packages]
 
 permissions:
   contents: read
