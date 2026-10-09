@@ -67,6 +67,7 @@ A stack is skipped if neither its `base` nor its `<env>` compose file exists.
 ```
 infra start --env <dev|prod>
 infra stop  --env <dev|prod>
+infra hosts [--check] [--output <file>]
 infra help
 infra version
 ```
@@ -74,6 +75,44 @@ infra version
 `--env` also accepts the long aliases `development` / `production`, the
 short form `-e`, and `--env=dev` syntax. `help` / `version` can also be
 invoked as `-h` / `--help` and `-v` / `--version`.
+
+### `hosts` — the hostname → server map
+
+```sh
+infra hosts           # write <repo root>/HOSTS.md
+infra hosts --check   # exit non-zero if HOSTS.md is stale
+```
+
+Unlike every other command, `hosts` is **repo-wide**: it runs from anywhere in
+the repository, discovers every host directory by its `infra.config.sh`, and
+takes no `--env`. It answers "which server serves this hostname?" without
+grepping Traefik labels across host directories — the question you ask during
+an outage, and the one that gets harder with every server added.
+
+Hostnames come from the **prod** router rules, read through
+`docker compose config`, so an `include`, an `extends` or a variable cannot
+hide one. Each host's server is the `DOCKER_CONTEXT` in its own `prod` script,
+so this command never becomes a second place to record it. Dev `.localhost`
+names are skipped: they are not DNS and not served by these servers.
+
+A hostname claimed by **two** hosts is a hard error and nothing is written.
+Both servers' Traefik would request a certificate for it, and whichever one DNS
+pointed at would win.
+
+Wire the check in so the committed file cannot go stale:
+
+```json
+{
+  "scripts": {
+    "hosts": "infra hosts",
+    "hosts:check": "infra hosts --check",
+    "verify": "vp check && pnpm typecheck && pnpm hosts:check"
+  }
+}
+```
+
+Requires `docker` (for `compose config`, which parses locally and needs no
+daemon) and `jq`.
 
 ### Cleanup on `start`
 

@@ -27,6 +27,8 @@ source "$LIB_DIR/secrets.sh"
 source "$LIB_DIR/stacks.sh"
 # shellcheck source=../lib/cleanup.sh
 source "$LIB_DIR/cleanup.sh"
+# shellcheck source=../lib/hosts.sh
+source "$LIB_DIR/hosts.sh"
 
 VERSION="$(node -p "require('${CLI_ROOT}/package.json').version" 2>/dev/null || echo "unknown")"
 
@@ -37,11 +39,14 @@ Usage: infra <command> [options]
 Commands:
   start --env <dev|prod>    Start infrastructure, applications, and tooling stacks
   stop  --env <dev|prod>    Stop all stacks
+  hosts [--check]           Write HOSTS.md: every routed hostname and its server
   help                      Show this help
   version                   Show version
 
 Options:
   -e, --env <dev|prod>      Environment to target (required for start/stop)
+      --check               hosts: fail if HOSTS.md is stale instead of writing it
+  -o, --output <file>       hosts: write somewhere other than <repo root>/HOSTS.md
   -h, --help                Show help
   -v, --version             Show version
 
@@ -56,21 +61,27 @@ Configuration (optional ./infra.config.sh in CWD):
   SECRETS_<STACK>           Per-stack Infisical secret exports (prod only)
 
 Run from the directory containing the stack folders (typically your project's docker/).
+The hosts command is the exception: it is repo-wide, reads every host directory,
+and needs no --env.
 EOF
 }
 
 COMMAND=""
 ENV_ARG=""
+HOSTS_ARGS=()
 
 while [ $# -gt 0 ]; do
   case "$1" in
-    start|stop|help|version)
+    start|stop|hosts|help|version)
       [ -z "$COMMAND" ] && COMMAND="$1"
       shift
       ;;
     -h|--help)    COMMAND="help";    shift ;;
     -v|--version) COMMAND="version"; shift ;;
     -e|--env)     ENV_ARG="$2";      shift 2 ;;
+    --check)      HOSTS_ARGS+=("$1"); shift ;;
+    -o|--output)  HOSTS_ARGS+=("$1" "$2"); shift 2 ;;
+    --output=*)   HOSTS_ARGS+=("$1"); shift ;;
     --env=*)      ENV_ARG="${1#--env=}"; shift ;;
     *)
       error "Unknown argument: $1"
@@ -84,6 +95,10 @@ done
 case "$COMMAND" in
   ""|help) usage; exit 0 ;;
   version) echo "infra-cli v${VERSION}"; exit 0 ;;
+  hosts)
+    cmd_hosts "${HOSTS_ARGS[@]+"${HOSTS_ARGS[@]}"}"
+    exit $?
+    ;;
 esac
 
 if [ -z "$ENV_ARG" ]; then
