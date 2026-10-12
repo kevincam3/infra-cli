@@ -8,7 +8,9 @@
   "internalChecksFilter": "strict",
   "automergeStrategy": "rebase",
   "lockFileMaintenance": {
-    "enabled": true
+    "enabled": true,
+    "automerge": true,
+    "automergeType": "branch"
   },
   "postUpdateOptions": ["pnpmDedupe"],
   "packageRules": [

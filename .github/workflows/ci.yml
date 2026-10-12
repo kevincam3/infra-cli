@@ -3,10 +3,11 @@ name: ci
 on:
   pull_request:
   # renovate/trusted-npm-packages is the branch of the "trusted npm packages"
-  # group in renovate.json. Renovate automerges it without opening a PR, so the
+  # group in renovate.json, and renovate/lock-file-maintenance the weekly
+  # lockfile refresh. Renovate automerges both without opening a PR, so the
   # checks have to run on the branch push itself.
   push:
-    branches: [main, renovate/trusted-npm-packages]
+    branches: [main, renovate/trusted-npm-packages, renovate/lock-file-maintenance]
 
 permissions:
   contents: read
