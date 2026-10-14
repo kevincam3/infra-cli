@@ -15,6 +15,11 @@
   "postUpdateOptions": ["pnpmDedupe"],
   "packageRules": [
     {
+      "description": "Renovate cannot see release dates for lock file maintenance (pnpm does the resolving), so its stability check never passes and the branch never automerges. pnpm's own minimumReleaseAge in pnpm-workspace.yaml enforces the 48h hold instead",
+      "matchUpdateTypes": ["lockFileMaintenance"],
+      "minimumReleaseAge": null
+    },
+    {
       "groupName": "trusted npm packages",
       "matchPackageNames": [
         "@commitlint/**",
