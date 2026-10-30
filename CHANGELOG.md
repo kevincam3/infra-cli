@@ -1,3 +1,10 @@
+## [3.2.1](https://github.com/kevincam3/infra-cli/compare/v3.2.0...v3.2.1) (2026-10-30)
+
+
+### Bug Fixes
+
+* support Node 24 and 26 ([8431778](https://github.com/kevincam3/infra-cli/commit/8431778dad04d0a335df9dc7a613951743652407))
+
 # [3.2.0](https://github.com/kevincam3/infra-cli/compare/v3.1.0...v3.2.0) (2026-10-09)
 
 
